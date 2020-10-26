@@ -9,7 +9,7 @@ application run steps
 
 e.g.
 
-edd comment
+add comment
 http://host:port/comment
 {
 "comment":"test_comment"
