@@ -56,9 +56,9 @@ public class ApplicationTest {
             ResponseEntity<Comment> responseComment = restTemplate.getForEntity(
                     getURL("/comment?id=" + id), Comment.class);
             assertThat(responseComment.getStatusCode(), is(HttpStatus.OK));
-            final Comment fooResponseComment = responseComment.getBody();
-            assertThat(fooResponseComment, notNullValue());
-            assertThat(fooResponseComment.getId(), is(id));
+            final Comment respComment = responseComment.getBody();
+            assertThat(respComment, notNullValue());
+            assertThat(respComment.getId(), is(id));
             countComments++;
             /*
                 check added notification
@@ -66,21 +66,21 @@ public class ApplicationTest {
             ResponseEntity<Notification> responseNotification = restTemplate.getForEntity(
                     getURL("/notification?comment_id=" + id), Notification.class);
             assertThat(responseNotification.getStatusCode(), is(HttpStatus.OK));
-            final Notification fooResponseNotification = responseNotification.getBody();
-            assertThat(fooResponseNotification, notNullValue());
-            assertThat(fooResponseNotification.getComment_id(), is(id));
+            final Notification respNotification = responseNotification.getBody();
+            assertThat(respNotification, notNullValue());
+            assertThat(respNotification.getComment_id(), is(id));
             countNotifications++;
         } catch (Throwable e) {
             ResponseEntity<Comment> response = restTemplate.getForEntity(
                     getURL("/comment?id=" + id), Comment.class);
             assertThat(response.getStatusCode(), is(HttpStatus.OK));
-            final Comment fooResponse = response.getBody();
-            assertThat(fooResponse.getId(), is(IsNull.nullValue()));
+            final Comment resp = response.getBody();
+            assertThat(resp.getId(), is(IsNull.nullValue()));
             ResponseEntity<Notification> responseNot = restTemplate.getForEntity(
                     getURL("/notification?comment_id=" + id), Notification.class);
             assertThat(responseNot.getStatusCode(), is(HttpStatus.OK));
-            final Notification fooResponseNot = responseNot.getBody();
-            assertThat(fooResponseNot.getId(), is(IsNull.nullValue()));
+            final Notification respNot = responseNot.getBody();
+            assertThat(respNot.getId(), is(IsNull.nullValue()));
         }
     }
 

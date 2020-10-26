@@ -21,14 +21,14 @@ public class Logical {
 
     @AfterReturning(value = "execution(* com.oskelly.controller.CommentController.addComment(..))", returning = "comment")
     public void afterReturningAddComment(JoinPoint joinPoint, Comment comment) {
-	try {
+        try {
             BusinessLogic.doSomeWorkOnCommentCreation();
-	} catch (Exception e) {
+        } catch (Exception e) {
             notificationServiceImpl.deleteNotification(comment.getId());
             System.out.println("notification deleted");
             commentServiceImpl.deleteComment(comment.getId());
             System.out.println("comment deleted");
-            throw new RuntimeException();
+            throw e;
         }
     }
 }
