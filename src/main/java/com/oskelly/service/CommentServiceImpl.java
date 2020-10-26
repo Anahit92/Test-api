@@ -5,22 +5,24 @@ import com.oskelly.MakeResponse;
 import com.oskelly.model.Comment;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+
 import java.sql.*;
-import java.util.*;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.UUID;
 
 @Service
 public class CommentServiceImpl implements CommentService {
 
-    private Connection con = new DataAccess().getConnection();
+    private final Connection con = new DataAccess().getConnection();
 
     @Autowired
-    private  NotificationServiceImpl notificationServiceImpl;
+    private NotificationServiceImpl notificationServiceImpl;
 
     public List<Comment> getComments(int page, int size) {
         List<Comment> list = new ArrayList();
-        try (Connection con = new DataAccess().getConnection();
-             Statement statement = con.createStatement()) {
-            try(ResultSet resultSet = statement.
+        try (Statement statement = con.createStatement();
+             ResultSet resultSet = statement.
                     executeQuery(String.format("SELECT * FROM public.comment limit %d offset %d", size, page*size))) {
                 while (resultSet.next()) {
                     Comment comment = new Comment(
@@ -29,9 +31,6 @@ public class CommentServiceImpl implements CommentService {
                             resultSet.getTimestamp("time"));
                     list.add(comment);
                 }
-            } catch (SQLException e) {
-                e.printStackTrace();
-            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -44,12 +43,12 @@ public class CommentServiceImpl implements CommentService {
         Comment comment = new Comment();
         try (Statement statement = con.createStatement();
              ResultSet resultSet = statement.executeQuery(String.format(
-                    "SELECT * FROM public.comment where id = '%s'", id))) {
-                while (resultSet.next()) {
-                    comment.setId((UUID) resultSet.getObject("id"));
-                    comment.setComment(resultSet.getString("comment"));
-                    comment.setTime(resultSet.getTimestamp("time"));
-                }
+                     "SELECT * FROM public.comment where id = '%s'", id))) {
+            while (resultSet.next()) {
+                comment.setId((UUID) resultSet.getObject("id"));
+                comment.setComment(resultSet.getString("comment"));
+                comment.setTime(resultSet.getTimestamp("time"));
+            }
         } catch (SQLException e) {
             e.printStackTrace();
         }
@@ -60,7 +59,7 @@ public class CommentServiceImpl implements CommentService {
     public void addComment(Comment comment) {
         String query = "insert into public.comment values (?, ?, ?)";
         UUID id = comment.getId();
-        if(comment.getId() == null)
+        if (comment.getId() == null)
             id = UUID.randomUUID();
 
         Timestamp time = new Timestamp(System.currentTimeMillis());
@@ -69,15 +68,15 @@ public class CommentServiceImpl implements CommentService {
             preparedStatement.setString(2, comment.getComment());
             preparedStatement.setTimestamp(3, time);
             preparedStatement.execute();
-            System.out.println("comment added with this id - "+ id);
+            System.out.println("comment added with this id - " + id);
             notificationServiceImpl.addNotification(comment.getId());
         } catch (SQLException e) {
             e.printStackTrace();
         }
-    };
+    }
 
     public void deleteComment(UUID id) {
-        try (Statement st = con.createStatement();) {
+        try (Statement st = con.createStatement()) {
             st.executeUpdate(String.format("delete from public.comment where id = '%s'", id));
         } catch (SQLException e) {
             e.printStackTrace();

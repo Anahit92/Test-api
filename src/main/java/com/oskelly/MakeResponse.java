@@ -3,6 +3,7 @@ package com.oskelly;
 import com.oskelly.model.Comment;
 import com.oskelly.model.Link;
 import com.oskelly.model.Notification;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -12,11 +13,11 @@ public class MakeResponse {
         Link link = new Link();
         String prev;
         String next;
-        if(page != 0){
-            prev = String.format("/comments?page=%d&size=%d", page-1, size);
+        if (page != 0) {
+            prev = String.format("/comments?page=%d&size=%d", page - 1, size);
             link.setPrev(prev);
         }
-        next = String.format("/comments?page=%d&size=%d", page+1, size);
+        next = String.format("/comments?page=%d&size=%d", page + 1, size);
         link.setNext(next);
         List l = new ArrayList();
         l.add(list);
@@ -29,11 +30,11 @@ public class MakeResponse {
         Link link = new Link();
         String prev;
         String next;
-        if(page != 0){
-            prev = String.format("/notifications?page=%d&size=%d", page-1, size);
+        if (page != 0) {
+            prev = String.format("/notifications?page=%d&size=%d", page - 1, size);
             link.setPrev(prev);
         }
-        next = String.format("/notifications?page=%d&size=%d", page+1, size);
+        next = String.format("/notifications?page=%d&size=%d", page + 1, size);
         link.setNext(next);
         List l = new ArrayList();
         l.add(list);
