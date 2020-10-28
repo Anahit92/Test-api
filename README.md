@@ -3,7 +3,7 @@
 application run steps
 
 1. mvn clean 
-2. mvn install
+2. mvn install -DskipTests
 3. run Dockerfile
 4.run docker-compose.yml
 
